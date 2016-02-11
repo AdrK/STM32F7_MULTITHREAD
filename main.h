@@ -43,6 +43,11 @@
 #include "cmsis_os.h"                   // CMSIS RTOS header file
 #include "stm32f7xx_hal.h"
 #include "Analyzer.h"
+#include "GUI.h"                        // Segger.MDK-Pro::Graphics:CORE
+#include "Board_LED.h"                  // ::Board Support:LED
+#include "Board_Touch.h"                // ::Board Support:Touchscreen
+#include "stm32746g_discovery_sdram.h"  // Keil.STM32F746G-Discovery::Board Support:Drivers:SDRAM
+#include <string.h>
 
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/

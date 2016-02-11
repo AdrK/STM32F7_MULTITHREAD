@@ -47,14 +47,6 @@
 #include "RTE_Components.h"             // Component selection
 #endif
 
-#include "GUI.h"                        // Segger.MDK-Pro::Graphics:CORE
-#include "Board_LED.h"                  // ::Board Support:LED
-#include "Board_Touch.h"                // ::Board Support:Touchscreen
-#include "stm32746g_discovery_sdram.h"  // Keil.STM32F746G-Discovery::Board Support:Drivers:SDRAM
-#include <cstdlib>
-#include <stdio.h>
-#include <string.h>
-
 #ifdef RTE_CMSIS_RTOS_RTX
 extern uint32_t os_time;
 
@@ -136,10 +128,19 @@ int main(void)
   osKernelStart();                      // start thread execution 
 #endif
 	Analyzer_Init();
+	
 	GUI_Init();
+	
+	if(!GUI_CURSOR_GetState())
+		GUI_CURSOR_Select(&GUI_CursorCrossM);
+	GUI_CURSOR_Show();
+	
 	osMutexWait(mid_Thread_Mutex,osWaitForever);
+	
 	Hello_MSG();
+	
 	osMutexRelease(mid_Thread_Mutex);
+	
 	osThreadTerminate(osThreadGetId());
 }
 

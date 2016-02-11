@@ -1,5 +1,5 @@
 .\objects\lcdconf.o: RTE\Graphics_Display\STM32F746NGHx\LCDConf.c
-.\objects\lcdconf.o: C:\Users\adria\Documents\Workspace\Keil_uVision\STM32F746_Discovery\STM32F7_Multithread_Training\RTE\RTE_Components.h
+.\objects\lcdconf.o: C:\Users\adria\Documents\Workspace\Keil_uVision\STM32F746_Discovery\STM32F7_MULTITHREAD\RTE\RTE_Components.h
 .\objects\lcdconf.o: C:\Keil_v5\ARM\PACK\Keil\MDK-Middleware\7.0.0\emWin\Include\GUI.h
 .\objects\lcdconf.o: C:\Keil_v5\ARM\PACK\Keil\MDK-Middleware\7.0.0\emWin\Include\GUI_ConfDefaults.h
 .\objects\lcdconf.o: C:\Keil_v5\ARM\PACK\Keil\MDK-Middleware\7.0.0\emWin\Include\GUIConf.h
@@ -15,7 +15,7 @@
 .\objects\lcdconf.o: C:\Keil_v5\ARM\PACK\Keil\MDK-Middleware\7.0.0\emWin\Include\GUIDRV_Lin.h
 .\objects\lcdconf.o: C:\Keil_v5\ARM\PACK\Keil\MDK-Middleware\7.0.0\emWin\Include\LCD_X.h
 .\objects\lcdconf.o: C:\Keil_v5\ARM\PACK\Keil\STM32F7xx_DFP\2.3.0\Drivers\STM32F7xx_HAL_Driver\Inc\stm32f7xx_hal.h
-.\objects\lcdconf.o: C:\Users\adria\Documents\Workspace\Keil_uVision\STM32F746_Discovery\STM32F7_Multithread_Training\RTE\Device\STM32F746NGHx\stm32f7xx_hal_conf.h
+.\objects\lcdconf.o: C:\Users\adria\Documents\Workspace\Keil_uVision\STM32F746_Discovery\STM32F7_MULTITHREAD\RTE\Device\STM32F746NGHx\stm32f7xx_hal_conf.h
 .\objects\lcdconf.o: C:\Keil_v5\ARM\PACK\Keil\STM32F7xx_DFP\2.3.0\Drivers\STM32F7xx_HAL_Driver\Inc\stm32f7xx_hal_rcc.h
 .\objects\lcdconf.o: C:\Keil_v5\ARM\PACK\Keil\STM32F7xx_DFP\2.3.0\Drivers\STM32F7xx_HAL_Driver\Inc\stm32f7xx_hal_def.h
 .\objects\lcdconf.o: C:\Keil_v5\ARM\PACK\Keil\STM32F7xx_DFP\2.3.0\Drivers\CMSIS\Device\ST\STM32F7xx\Include\stm32f7xx.h

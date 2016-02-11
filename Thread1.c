@@ -8,43 +8,41 @@
 			PG7, PB4, PA8, PG6, PH6, PC6, PI3, PC7
 		****************************************************/
 
-extern void Error_Handler(void);
 void Thread1 (void const *argument);                             // thread function
+extern void Error_Handler(void);
+
 osThreadId tid_Thread1;                                          // thread id
 osThreadDef (Thread1, osPriorityHigh, 1, 1024);                // thread object
-volatile osMutexId mid_Thread_Mutex;                             // mutex id
+osMutexId mid_Thread_Mutex;                             // mutex id
+extern TOUCH_STATE g_Touched_Cur;
 
 int Init_Thread1(void)
 {
 	tid_Thread1 = osThreadCreate (osThread(Thread1),NULL);
-  if (!tid_Thread1) Error_Handler();
+  if (!tid_Thread1) Error_Handler();	
   return(0);
 }
 
 void Thread1 (void const *argument) {
 	static uint16_t th1_counter=0;
-	char tab2[5];
-	const char *tab1=" ->THREAD 1 ";
+	char tab1[5];
+	char tab2[30];
 
 	while(1)
 	{
-																											Anal_CH1_Set();
-		osDelay(300);
-																											Anal_CH2_Set();
+		osDelay(10);
 		osMutexWait(mid_Thread_Mutex,osWaitForever);
-																											Anal_CH2_Reset();
+		
 		th1_counter++;
-		sprintf( tab2, "%d", th1_counter );
-
-		(void)strcat(tab2,tab1);
+		sprintf( tab1, "%d", th1_counter );
+		(void)strncpy(tab2,"Refresh counts: ",30);
+		(void)strncat(tab2,tab1,30);
+		
 		GUI_DispStringHCenterAt( tab2, 240, 100 );
-
-
-		osDelay(300);
-																											Anal_CH3_Set();
+		
+		GUI_CURSOR_SetPosition(g_Touched_Cur.x,g_Touched_Cur.y);
+		osDelay(10);
 		osMutexRelease(mid_Thread_Mutex);
-																											Anal_CH3_Reset();
-																											Anal_CH1_Reset();
 		osThreadYield();
 	}
 }
