@@ -53,13 +53,18 @@ extern uint32_t os_time;
 uint32_t HAL_GetTick(void) { 
   return os_time; 
 }
+
 #endif
 
-extern int Init_Thread1(void);
-extern int Init_Thread2(void);
-extern osThreadId tid_Thread1;
-extern osThreadId tid_Thread2;
-extern osMutexId mid_Thread_Mutex;                               // mutex id
+// Global variables
+
+uint8_t Trigger_Point=DEFAULT_TRIGGER_POINT;
+// Main aquisition memory block
+uint32_t values[ADC_BUFFER_LENGTH] __attribute__((at(0xC0400000)));
+// Sample buffer
+volatile unsigned short values_BUF[ADC_BUFFER_LENGTH];
+ADC_HandleTypeDef  g_AdcHandle;
+DMA_HandleTypeDef  g_DmaHandle;
 
 /** @addtogroup STM32F7xx_HAL_Examples
   * @{
@@ -69,15 +74,13 @@ extern osMutexId mid_Thread_Mutex;                               // mutex id
   * @{
   */ 
 
-/* Private typedef -----------------------------------------------------------*/
-/* Private define ------------------------------------------------------------*/
-/* Private macro -------------------------------------------------------------*/
-/* Private variables ---------------------------------------------------------*/
-/* Private function prototypes -----------------------------------------------*/
+
 static void SystemClock_Config(void);
 void Error_Handler(void);
 static void MPU_Config(void);
 static void CPU_CACHE_Enable(void);
+extern HAL_StatusTypeDef ADC_INIT(ADC_HandleTypeDef* AdcHandle);
+extern HAL_StatusTypeDef ConfigureDMA(DMA_HandleTypeDef* DmaHandle, ADC_HandleTypeDef* AdcHandle);
 
 /* Private functions ---------------------------------------------------------*/
 
@@ -111,7 +114,10 @@ int main(void)
        - Low Level Initialization
      */
   HAL_Init();
-
+	if( ConfigureDMA(&g_DmaHandle, &g_AdcHandle) != HAL_OK)
+		Error_Handler();
+	if( ADC_INIT(&g_AdcHandle) != HAL_OK)
+		Error_Handler();
   /* Configure the System clock to have a frequency of 216 MHz */
   SystemClock_Config();
 
@@ -121,46 +127,24 @@ int main(void)
 	BSP_SDRAM_Init();
 	Touch_Initialize();
 	
-#ifdef RTE_CMSIS_RTOS                   // when using CMSIS RTOS
-	Init_Thread1();
-	Init_Thread2();
-
+#ifdef RTE_CMSIS_RTOS                   // when using CMSIS RTOS	
+	
+	Init_RTOS_Utils();
+	Init_th_GUI();
+	Init_th_Touch();
+	
   osKernelStart();                      // start thread execution 
 #endif
 	Analyzer_Init();
-	
-	GUI_Init();
 	
 	if(!GUI_CURSOR_GetState())
 		GUI_CURSOR_Select(&GUI_CursorCrossM);
 	GUI_CURSOR_Show();
 	
-	osMutexWait(mid_Thread_Mutex,osWaitForever);
-	
-	Hello_MSG();
-	
-	osMutexRelease(mid_Thread_Mutex);
+	// Start data acquire
+	HAL_ADC_Start_DMA(&g_AdcHandle, values, ADC_BUFFER_LENGTH);
 	
 	osThreadTerminate(osThreadGetId());
-}
-
-void Hello_MSG(void) {
-
-	GUI_SetColor(GUI_BLUE);
-	GUI_SetFont(&GUI_Font16_1);
-	GUI_DispStringHCenterAt("Oscyloskop cyfrowy v1.1" , 240, 150);
-	GUI_DispStringHCenterAt("Adrian Kurylak" , 240, 175);
-	GUI_DispStringHCenterAt("Politechnika Wroclawska" , 240, 200);
-	GUI_SetFont(&GUI_Font32_1);
-	GUI_DispStringHCenterAt("Inicjalizacja" , 240, 120);
-	osDelay(250);
-	GUI_DispStringHCenterAt("Inicjalizacja." , 240, 120);
-	osDelay(500);
-	GUI_DispStringHCenterAt("Inicjalizacja.." , 240, 120);
-	osDelay(500);
-	GUI_DispStringHCenterAt("Inicjalizacja..." , 240, 120);
-	osDelay(750);
-	GUI_Clear();
 }
 
 /**

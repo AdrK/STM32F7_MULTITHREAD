@@ -69,14 +69,14 @@
 //   <i> Defines the number of threads with user-provided stack size.
 //   <i> Default: 0
 #ifndef OS_PRIVCNT
- #define OS_PRIVCNT     2
+ #define OS_PRIVCNT     3
 #endif
  
 //   <o>Total stack size [bytes] for threads with user-provided stack size <0-1048576:8><#/4>
 //   <i> Defines the combined stack size for threads with user-provided stack size.
 //   <i> Default: 0
 #ifndef OS_PRIVSTKSIZE
- #define OS_PRIVSTKSIZE 512       // this stack size value is in words
+ #define OS_PRIVSTKSIZE 768       // this stack size value is in words
 #endif
  
 //   <q>Stack overflow checking
@@ -165,21 +165,21 @@
 //   <i> Defines priority for Timer Thread
 //   <i> Default: High
 #ifndef OS_TIMERPRIO
- #define OS_TIMERPRIO   5
+ #define OS_TIMERPRIO   6
 #endif
  
 //   <o>Timer Thread stack size [bytes] <64-4096:8><#/4>
 //   <i> Defines stack size for Timer thread.
 //   <i> Default: 200
 #ifndef OS_TIMERSTKSZ
- #define OS_TIMERSTKSZ  256     // this stack size value is in words
+ #define OS_TIMERSTKSZ  512     // this stack size value is in words
 #endif
  
 //   <o>Timer Callback Queue size <1-32>
 //   <i> Number of concurrent active timer callback functions.
 //   <i> Default: 4
 #ifndef OS_TIMERCBQS
- #define OS_TIMERCBQS   4
+ #define OS_TIMERCBQS   24
 #endif
  
 // </e>
@@ -193,7 +193,7 @@
 //   <i> when they are called from the interrupt handler.
 //   <i> Default: 16 entries
 #ifndef OS_FIFOSZ
- #define OS_FIFOSZ      16
+ #define OS_FIFOSZ      96
 #endif
  
 // </h>
@@ -225,6 +225,7 @@
 void os_idle_demon (void) {
  
   for (;;) {
+		__wfe();
     /* HERE: include optional user code to be executed when no thread runs.*/
   }
 }
@@ -283,16 +284,20 @@ void os_error (uint32_t error_code) {
   /* HERE: include optional code to be executed on runtime error. */
   switch (error_code) {
     case OS_ERROR_STACK_OVF:
+			for (;;);
       /* Stack overflow detected for the currently running task. */
       /* Thread can be identified by calling svcThreadGetId().   */
       break;
     case OS_ERROR_FIFO_OVF:
+			for (;;);
       /* ISR FIFO Queue buffer overflow detected. */
       break;
     case OS_ERROR_MBX_OVF:
+			for (;;);
       /* Mailbox overflow detected. */
       break;
     case OS_ERROR_TIMER_OVF:
+			for (;;);
       /* User Timer Callback Queue overflow detected. */
       break;
     default:

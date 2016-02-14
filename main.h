@@ -42,6 +42,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "cmsis_os.h"                   // CMSIS RTOS header file
 #include "stm32f7xx_hal.h"
+#include "stm32f7xx_hal_conf.h"         // Keil::Device:STM32Cube Framework:Classic
 #include "Analyzer.h"
 #include "GUI.h"                        // Segger.MDK-Pro::Graphics:CORE
 #include "Board_LED.h"                  // ::Board Support:LED
@@ -50,11 +51,21 @@
 #include <string.h>
 
 /* Exported types ------------------------------------------------------------*/
+extern osMutexId mid_GUI_Mutex;
+extern osMutexId mid_FPS_Mutex;
 /* Exported constants --------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
+#define ADC_BUFFER_LENGTH 		1024
+#define DEFAULT_TRIGGER_POINT	255-50
+#define DMA_ConvCpltSig 			0xF0F0
+#define DMA_ConvHalfCpltSig 	0xF0F1
+#define Sig_FPS								0xFFF0
 /* Exported functions ------------------------------------------------------- */
 void Hello_MSG(void);
-
+extern void Init_RTOS_Utils(void);
+extern int Init_th_GUI(void);
+extern int Init_th_Touch(void);
+extern int Init_th_FPS(void);
 #endif /* __MAIN_H */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
